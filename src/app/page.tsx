@@ -5,7 +5,7 @@ export default async function Home() {
   const data = await fetch(
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000/api/get-posts'
-      : process.env.VERCEL_URL + '/api/get-posts',
+      : 'https://' + process.env.VERCEL_URL + '/api/get-posts',
     {
       cache: 'force-cache',
       next: {
