@@ -1,20 +1,19 @@
+import { sql } from '@/server/db';
+import { unstable_cache } from 'next/cache';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+const getPosts = unstable_cache(
+  async () => {
+    const data = await sql`SELECT * FROM posts`;
+    return data as Array<{ id: string; title: string; description: string }>;
+  },
+  ['posts-list'],
+  { tags: ['posts'] }
+);
+
 export default async function Home() {
-  const data = await fetch(
-    process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3000/api/get-posts'
-      : 'https://' + process.env.VERCEL_URL + '/api/get-posts',
-    {
-      cache: 'force-cache',
-      next: {
-        tags: ['posts'],
-      },
-    }
-  );
-  const response = await data.json();
-  const posts = response.data || response || [];
+  const posts = await getPosts();
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6'>
