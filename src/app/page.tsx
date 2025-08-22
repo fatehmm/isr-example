@@ -1,16 +1,20 @@
 import { sql } from '@/server/db';
-import { unstable_cache } from 'next/cache';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-const getPosts = unstable_cache(
-  async () => {
-    const data = await sql`SELECT * FROM posts`;
-    return data as Array<{ id: string; title: string; description: string }>;
-  },
-  ['posts-list'],
-  { tags: ['posts'] }
-);
+// const getPosts = unstable_cache(
+//   async () => {
+//     const data = await sql`SELECT * FROM posts`;
+//     return data as Array<{ id: string; title: string; description: string }>;
+//   },
+//   ['posts-list'],
+//   { tags: ['posts'] }
+// );
+
+async function getPosts() {
+  const data = await sql`SELECT * FROM posts`;
+  return data as Array<{ id: string; title: string; description: string }>;
+}
 
 export default async function Home() {
   const posts = await getPosts();
