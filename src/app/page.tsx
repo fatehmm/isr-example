@@ -1,5 +1,6 @@
 import { sql } from '@/server/db';
 import Link from 'next/link';
+import { connection } from 'next/server';
 import { Suspense } from 'react';
 
 // const getPosts = unstable_cache(
@@ -12,6 +13,7 @@ import { Suspense } from 'react';
 // );
 
 async function getPosts() {
+  await connection();
   const data = await sql`SELECT * FROM posts`;
   return data as Array<{ id: string; title: string; description: string }>;
 }
